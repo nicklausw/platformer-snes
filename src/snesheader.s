@@ -16,5 +16,5 @@
 
 
 .segment "VECTORS"
- .word 0, 0, 0, 0, 0, 0, 0, 0
+ .word 0, 0, 0, vblank, 0, 0, 0, 0
  .word 0, 0, 0, 0, 0, 0, reset, 0

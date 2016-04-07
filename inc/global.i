@@ -7,7 +7,7 @@
 .localchar '?'
 
 ; main.s
-.global reset
+.global reset, vblank
 
 ; gfx.s
 .global palette, palette_size

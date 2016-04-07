@@ -64,6 +64,13 @@ done:
   lda #$0F
   sta PPUBRIGHT
   
+  
+  ; we want nmi
+  lda #VBLANK_NMI|AUTOREAD
+  sta PPUNMI
+
+  cli ; enable interrupts
+  
 ?forever:
   jmp ?forever
 .endproc
@@ -116,3 +123,24 @@ loop: seta8
 done:
   rts
 .endproc
+
+
+.proc vblank
+  pha
+  phx
+  phy
+  phd
+  phb
+  php
+
+  lda NMISTATUS ; clear NMI Flag
+
+  plp
+  plb
+  pld
+  ply
+  plx
+  pla
+  rti
+.endproc
+  
