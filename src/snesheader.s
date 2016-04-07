@@ -2,7 +2,7 @@
 
 .segment "SNESHEADER"
  romname:
- .byte "I DUNNO" ; rom name
+ .byte "PLATFORMER" ; rom name
  
  ; make sure the rom name length is covered (thanks tepples)
  .assert * - romname <= 21, error, "ROM name too long"
