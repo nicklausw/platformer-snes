@@ -3,6 +3,11 @@
 # by nicklausw
 # public domain.
 
+# this format works as follows.
+# one byte is read, and that is
+# how many of the next byte to copy over. repeat.
+# when the first byte is $ff, the copy is done.
+
 import sys
 import argparse
 
