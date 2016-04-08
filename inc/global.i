@@ -14,7 +14,7 @@
 .global font, font_size
 
 ; ram.s
-.globalzp msg_ram
+.globalzp msg_ram, rle_cp_ram
 .global sprite_ram, sprite_ext
 
 ; macros

@@ -10,5 +10,4 @@ palette:
 palette_size:
 
 font:
-  .incbin "font.chr"
-font_size:
+  .incbin "font_rle.chr"

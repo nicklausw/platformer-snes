@@ -34,10 +34,9 @@
   ; copy font
   setaxy16
   stz PPUADDR  ; we will start video memory at $0000
-  lda #DMAMODE_PPUDATA
-  ldy #font_size-font
-  ldx #font & $FFFF
-  jsr ppu_copy
+  lda #font
+  sta rle_cp_ram
+  jsr rle_copy_ppu
   
   lda #$6000|NTXY(1,1)
   sta PPUADDR
@@ -143,4 +142,35 @@ done:
   pla
   rti
 .endproc
+
+.proc rle_copy_ppu
+  seta8
+  setxy16
+  ldy #$00
+
+loop: seta8
+  lda (rle_cp_ram), y
+  cpa #$ff
+  beq done
+  seta16
+  and #$ff
+  tax
+  iny
+  seta8
+  lda (rle_cp_ram),y
+  jsr rle_loop
+  iny
+  jmp loop
   
+done:
+  rts
+
+rle_loop:
+  seta16
+  and #$ff
+  sta PPUDATA
+  dex
+  cpx #$00
+  bne rle_loop
+  rts
+.endproc
