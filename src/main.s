@@ -148,7 +148,8 @@ done:
   setxy16
   ldy #$00
 
-loop: seta8
+ loop: 
+  seta8
   lda (rle_cp_ram), y
   cpa #$ff
   beq done
@@ -168,9 +169,10 @@ done:
 rle_loop:
   seta16
   and #$ff
+ loop2:
   sta PPUDATA
   dex
   cpx #$00
-  bne rle_loop
+  bne loop2
   rts
 .endproc
