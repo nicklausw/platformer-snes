@@ -1,6 +1,6 @@
 CC = ca65
 LD = ld65
-FIX = superfamicheck
+FIX = tools/snes-check.py
 
 TITLE = platformer
 
@@ -15,7 +15,7 @@ all: $(TITLE).sfc
 
 $(TITLE).sfc: $(OFILES)
 	$(LD) -o $(TITLE).sfc -C snes.cfg $(OFILES)
-	$(FIX) $(TITLE).sfc -S -f
+	$(FIX) $(TITLE).sfc
 
 $(SFILES): $(IFILES)
 
