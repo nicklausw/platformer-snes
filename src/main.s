@@ -50,7 +50,7 @@
   stx DMAADDR
   sty DMALEN
   seta8
-  lda #$7e
+  lda #.bankbyte(rle_cp_dat)
   sta DMAADDRBANK
   lda #%00000001
   sta COPYSTART
