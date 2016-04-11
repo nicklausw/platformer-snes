@@ -10,5 +10,4 @@ palette:
 palette_size:
 
 font:
-  .incbin "font_rle.chr";, 0, 100
-  ;.byte $ff
+  .incbin "font.rle"
