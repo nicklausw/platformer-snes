@@ -27,22 +27,42 @@
   stz CGADDR  ; Seek to the start of CGRAM
   setaxy16
   lda #DMAMODE_CGDATA
-  ldx #palette & $FFFF
+  ldx #palette & $ffff
   ldy #palette_size-palette
-  jsr ppu_copy
+  jsl ppu_copy
   
   ; copy font
   setaxy16
-  stz PPUADDR  ; we will start video memory at $0000
-  lda #font
+  lda #font & $ffff
   sta rle_cp_ram
-  jsr rle_copy_ppu
+  jsl rle_copy_ram
+  
+  setaxy16
+  stz PPUADDR
+  
+  lda #DMAMODE_PPUDATA
+  ldx #.loword(rle_cp_dat)
+  ldy 8192
+  
+  php
+  setaxy16
+  sta DMAMODE
+  stx DMAADDR
+  sty DMALEN
+  seta8
+  lda #$7e
+  sta DMAADDRBANK
+  lda #%00000001
+  sta COPYSTART
+  plp
+  
+  seta16
   
   lda #$6000|NTXY(1,1)
   sta PPUADDR
 
 
-  lda #message
+  lda #message & $ffff
   sta msg_ram
   jsr scrn_copy
   
@@ -50,7 +70,7 @@
   lda #$6000|NTXY(0,15)
   sta PPUADDR
   
-  lda #ground
+  lda #ground & $ffff
   sta msg_ram
   jsr scrn_copy
   
@@ -65,10 +85,10 @@ done:
   
   
   ; we want nmi
-  lda #VBLANK_NMI|AUTOREAD
-  sta PPUNMI
+  ;lda #VBLANK_NMI|AUTOREAD
+  ;sta PPUNMI
 
-  cli ; enable interrupts
+  ;cli ; enable interrupts
   
 ?forever:
   jmp ?forever
@@ -143,36 +163,48 @@ done:
   rti
 .endproc
 
-.proc rle_copy_ppu
-  seta8
+.proc rle_copy_ram
   setxy16
-  ldy #$00
-
- loop: 
   seta8
+  ldy #$00
+  sty rle_cp_num
+  lda #0   ; clear Accum. hi-byte
+  xba
+
+ loop:
   lda (rle_cp_ram), y
   cpa #$ff
   beq done
-  seta16
-  and #$ff
   tax
   iny
-  seta8
   lda (rle_cp_ram),y
-  jsr rle_loop
+  bra rle_loop
+rle_loop_done:
   iny
-  jmp loop
-  
+  bra loop
+ 
 done:
-  rts
+  rtl
 
+; IN: X = count
+;      A = byte
 rle_loop:
-  seta16
-  and #$ff
- loop2:
-  sta PPUDATA
+; INCOMPLETE / WILL NOT WORK (for above mentioned reasons in forum post)
+; Please finish reading forum post and reply so we can work out your needs
+  phy
+  ldy rle_cp_num
+rle_inter:
+  phx
+  phy
+  plx
+  sta rle_cp_dat,x   ; this is only writes the low byte.
+  phx
+  ply
+  plx
+  iny
   dex
-  cpx #$00
-  bne loop2
-  rts
+  bne rle_inter
+  sty rle_cp_num
+  ply
+  bra rle_loop_done
 .endproc

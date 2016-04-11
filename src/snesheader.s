@@ -13,8 +13,8 @@
  .byte $30 ; lorom fastrom
  .byte $00 ; no battery ram
  .byte $08 ; 256K rom
-
-
-.segment "VECTORS"
- .word 0, 0, 0, vblank, 0, 0, 0, 0
- .word 0, 0, 0, 0, 0, 0, reset, 0
+ 
+ .res 8
+ 
+ .addr 0, 0, 0, vblank, 0, 0, 0, 0
+ .addr 0, 0, 0, 0, 0, 0, reset, 0

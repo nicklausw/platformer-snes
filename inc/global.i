@@ -14,8 +14,8 @@
 .global font, font_size
 
 ; ram.s
-.globalzp msg_ram, rle_cp_ram
-.global sprite_ram, sprite_ext
+.globalzp msg_ram, rle_cp_ram, rle_cp_num
+.global rle_cp_dat: far
 
 ; macros
 

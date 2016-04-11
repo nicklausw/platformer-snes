@@ -2,9 +2,11 @@ CC = ca65
 LD = ld65
 FIX = tools/snes-check.py
 
+CFG = snes.cfg
+
 TITLE = platformer
 
-EMU = higan
+EMU = bsnes
 
 IFILES = $(wildcard inc/*.i)
 SFILES = $(wildcard src/*.s)
@@ -14,10 +16,11 @@ all: $(TITLE).sfc
 	$(EMU) $(TITLE).sfc
 
 $(TITLE).sfc: $(OFILES)
-	$(LD) -o $(TITLE).sfc -C snes.cfg $(OFILES)
+	$(LD) -o $(TITLE).sfc -C $(CFG) $(OFILES)
 	$(FIX) $(TITLE).sfc
 
 $(SFILES): $(IFILES)
+$(SFILES): $(CFG)
 
 obj/%.o: src/%.s
 	$(CC) -I inc --bin-include-dir gfx -o $@ $<

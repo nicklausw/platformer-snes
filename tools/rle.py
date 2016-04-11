@@ -21,8 +21,10 @@ f_out = open(args.out_file, 'wb')
 
 # python doesn't need variable initialization i think,
 # but for clarity's sake.
-byte_n = 0 # byte
-byte_c = 1 # byte count 
+byte_n = int.from_bytes(f_in.read(1), byteorder='little') # byte
+byte_c = 0 # byte count
+
+f_in.seek(0) 
 
 for c in f_in.read():
   if c != byte_n or byte_c == 0xFE:
