@@ -79,7 +79,7 @@ done:
   lda #%00000001  ; enable sprites and plane 0
   sta BLENDMAIN
   
-  lda #$0F
+  lda #$00
   sta PPUBRIGHT
   
   
@@ -88,6 +88,17 @@ done:
   sta PPUNMI
 
   cli ; enable interrupts
+  
+  ; now to fade in!
+  
+  lda #$01
+  
+fade_in:
+  wai ; wait a frame
+  sta PPUBRIGHT
+  ina
+  cpa #$0f
+  bne fade_in
   
 ?forever:
   wai
