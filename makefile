@@ -20,18 +20,21 @@ all: $(TITLE).sfc
 	$(EMU) $(TITLE).sfc
 
 $(TITLE).sfc: $(OFILES)
-	$(LD) -o $(TITLE).sfc -C $(CFG) $(OFILES)
-	$(FIX) $(TITLE).sfc
+	@echo linking to $(TITLE).sfc...
+	@$(LD) -o $(TITLE).sfc -C $(CFG) $(OFILES)
+	@$(FIX) $(TITLE).sfc
 
 $(SFILES): $(IFILES)
 $(SFILES): $(CFG)
 $(SFILES): $(RLE_G)
 
 obj/%.o: src/%.s
-	$(CC) -I inc --bin-include-dir gfx -o $@ $<
+	@echo assembling file $<...
+	@$(CC) -I inc --bin-include-dir gfx -o $@ $<
 
 gfx/%.rle: gfx/%.chr
-	$(RLE) $< $@
+	@echo convering $< to rle format...
+	@$(RLE) $< $@
 
 clean:
 	rm -f $(OFILES) $(RLE_G) $(TITLE).sfc
