@@ -4,7 +4,6 @@
 .segment "CODE"
 
 .proc reset
-  InitializeSNES
   
   ; forced blank
   seta8
@@ -34,7 +33,7 @@
   ; copy font
   setaxy16
   lda #font & $ffff
-  sta rle_cp_ram
+  sta rle_cp_src
   jsl rle_copy_ram
   
   setaxy16
@@ -85,18 +84,16 @@ done:
   
   
   ; we want nmi
-  ;lda #VBLANK_NMI|AUTOREAD
-  ;sta PPUNMI
+  lda #VBLANK_NMI|AUTOREAD
+  sta PPUNMI
 
-  ;cli ; enable interrupts
+  cli ; enable interrupts
   
 ?forever:
+  wai
   jmp ?forever
 .endproc
 
-; we'll need this at some point ;3
-zero_fill_byte:
-  .byte $00
 
 message:
         ;12345678901234567890123456789012
@@ -145,66 +142,61 @@ done:
 
 
 .proc vblank
-  pha
-  phx
-  phy
-  phd
   phb
-  php
-
-  lda NMISTATUS ; clear NMI Flag
-
-  plp
+  phk         ; set data bank to bank 0 (because banks $40-$7D
+  plb         ; and $C0-$FF can't reach low memory)
+  bit a:NMISTATUS
   plb
-  pld
-  ply
-  plx
-  pla
   rti
 .endproc
 
+;;
+; Decompresses data to rle_cp_dat using a simple RLE scheme.
+; @param DBR:rle_cp_src pointer to compressed data
+; @return rle_cp_index = 4
 .proc rle_copy_ram
   setxy16
   seta8
   ldy #$00
-  sty rle_cp_num
-  lda #0   ; clear Accum. hi-byte
-  xba
+  sty rle_cp_index
+  tya  ; clear low and high bytes of accumulator
 
  loop:
-  lda (rle_cp_ram), y
-  cpa #$ff
-  beq done
+  lda (rle_cp_src),y
+  cpa #$ff  ; RLE data is terminated by a run length of $FF
+  beq done  ; But what does a run length of 0 do?
   tax
   iny
-  lda (rle_cp_ram),y
-  bra rle_loop
-rle_loop_done:
+  lda (rle_cp_src),y
   iny
+  phy
+
+  ; At this point, Y (source index) is saved on the stack,
+  ; A is the byte to write, and X is the length of the run.
+  txy
+  
+  ; no higher byte!
+  pha
+  seta16
+  tya
+  and #$ff
+  tay
+  seta8
+  pla
+  
+  ldx rle_cp_index
+  ; And here, Y is the length of the run, A is the byte to write,
+  ; and X is the index into the decompression buffer.
+rle_inter:
+  sta rle_cp_dat,x
+  inx
+  dey
+  bne rle_inter
+
+  stx rle_cp_index
+  ply  ; Restore source index
   bra loop
  
 done:
   rtl
-
-; IN: X = count
-;      A = byte
-rle_loop:
-; INCOMPLETE / WILL NOT WORK (for above mentioned reasons in forum post)
-; Please finish reading forum post and reply so we can work out your needs
-  phy
-  ldy rle_cp_num
-rle_inter:
-  phx
-  phy
-  plx
-  sta rle_cp_dat,x   ; this is only writes the low byte.
-  phx
-  ply
-  plx
-  iny
-  dex
-  bne rle_inter
-  sty rle_cp_num
-  ply
-  bra rle_loop_done
 .endproc

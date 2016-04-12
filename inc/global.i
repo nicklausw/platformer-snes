@@ -1,7 +1,6 @@
 ; the global file
 
 .include "snes.i"
-.include "macros.i"
 .p816
 .smart
 .localchar '?'
@@ -14,8 +13,11 @@
 .global font, font_size
 
 ; ram.s
-.globalzp msg_ram, rle_cp_ram, rle_cp_num
+.globalzp msg_ram, rle_cp_src, rle_cp_index
 .global rle_cp_dat: far
+
+; initsnes.s
+.global InitializeSNES
 
 ; macros
 

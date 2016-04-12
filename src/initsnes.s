@@ -1,7 +1,17 @@
 ; thanks to espozo/koitsu/neviksti for the init snes routine!
 ; this is the only one i've found that really seems to work.
 
-.macro InitializeSNES
+.include "global.i"
+
+.segment "CODE"
+
+; we'll need this at some point ;3
+zero_fill_byte:
+  .byte $00
+
+InitializeSNES:
+  ; Register initialisation values, per official Nintendo documentation
+  
   sei          ; Disable interrupts
   clc          ; Clear carry, used by XCE
   xce          ; Set 65816 native mode
@@ -21,10 +31,7 @@
   ; Note: this should correlate with the top of BSS in snes.cfg
   ldx #$1fff
   txs          ; Set X = $1fff (stack pointer)
-
-
-; Register initialisation values, per official Nintendo documentation
-
+  
   sep #$20     ; A=8
   
   ; this fixes things somehow
@@ -179,4 +186,4 @@ _Loop09:
 
   LDA #$01          ;now zero the next 64KB (i.e. 128KB total)
   STA $420B         ;Initiate transfer
-.endmacro
+  jmp reset

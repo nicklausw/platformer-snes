@@ -17,4 +17,4 @@
  .res 8
  
  .addr 0, 0, 0, vblank, 0, 0, 0, 0
- .addr 0, 0, 0, 0, 0, 0, reset, 0
+ .addr 0, 0, 0, 0, 0, 0, InitializeSNES, 0
