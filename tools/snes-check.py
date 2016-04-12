@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # snes lorom checksum fixer
 # by nicklausw
-# public domain.
 
 import sys
 import argparse

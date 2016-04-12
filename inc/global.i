@@ -16,7 +16,7 @@
 .globalzp msg_ram, rle_cp_src, rle_cp_index
 .global rle_cp_dat: far
 
-; initsnes.s
+; initialize_snes.s
 .global InitializeSNES
 
 ; macros

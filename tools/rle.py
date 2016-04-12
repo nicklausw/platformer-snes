@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # basic rle compression program
 # by nicklausw
-# public domain.
 
 # this format works as follows.
 # one byte is read, and that is
