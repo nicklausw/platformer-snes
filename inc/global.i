@@ -19,6 +19,10 @@
 ; initialize_snes.s
 .global InitializeSNES
 
+; ppu.s
+.global ppu_copy, scrn_copy
+.global vblank, rle_copy_ram
+
 ; macros
 
 ; palette macro
