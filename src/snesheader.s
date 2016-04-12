@@ -1,3 +1,5 @@
+; as usual, thanks tepples for the basis
+
 .include "global.i"
 
 .segment "SNESHEADER"
@@ -14,7 +16,28 @@
  .byte $00 ; no battery ram
  .byte $08 ; 256K rom
  
- .res 8
+ .res 12
  
- .addr 0, 0, 0, vblank, 0, 0, 0, 0
- .addr 0, 0, 0, 0, 0, 0, InitializeSNES, 0
+ .addr cop_handler, brk_handler, abort_handler
+ .addr vblank, $FFFF, irq_handler
+ 
+ .res 4  ; more unused vectors
+ 
+ ; 6502 mode vectors
+ ; brk unused because 6502 mode uses irq handler and pushes the
+ ; X flag clear for /IRQ or set for BRK
+ .addr ecop_handler, $FFFF, eabort_handler
+ .addr enmi_handler, InitializeSNES, eirq_handler
+  
+.segment "CODE"
+
+; Unused exception handlers
+cop_handler:
+brk_handler:
+abort_handler:
+ecop_handler:
+eabort_handler:
+enmi_handler:
+eirq_handler:
+irq_handler:
+  rti
