@@ -23,20 +23,66 @@ f_out = open(args.out_file, 'wb')
 byte_n = int.from_bytes(f_in.read(1), byteorder='little') # byte
 byte_c = 0 # byte count
 
+single_build = 0 # number of single-byte pairs
+single_list = bytearray()
+
 f_in.seek(0) 
 
 for c in f_in.read():
-  if c != byte_n or byte_c == 0xFE:
-    f_out.write(bytes([byte_c]))
-    f_out.write(bytes([byte_n]))
-    byte_c = 1
-    byte_n = c
+  if c != byte_n or byte_c == 0xFD:
+    # what if we might be building up 1's?
+    if byte_c == 1:
+      single_list.append(byte_n)
+      single_build += 1
+      byte_n = c
+    else:
+      if single_build > 2:
+        # it's worth making a list
+        f_out.write(bytes([0xFE, single_build]))
+        
+        for d in single_list:
+          f_out.write(bytes([d]))
+          
+        single_build = 0
+        single_list = []
+      
+      elif single_build > 0:
+        # not worth a list
+        
+        while single_build < 2:
+          f_out.write(bytes([1, single_list[single_build - 1]]))
+          single_build += 1
+          
+        single_build = 0
+        single_list = []
+        
+      f_out.write(bytes([byte_c]))
+      f_out.write(bytes([byte_n]))
+      
+      byte_c = 1
+      byte_n = c
   else:
     byte_c += 1
 
+if single_build > 2:
+  # it's worth making a list
+  
+  f_out.write(bytes([0xFE, single_build]))
+  
+  for d in single_list:
+    f_out.write(bytes([d]))
+    
+elif single_build > 0:
+  # not worth a list
+  
+  while single_build < 2:
+    f_out.write(bytes([1, single_list[single_build - 1]]))
+    single_build += 1
+
 # now catch the last time around
-f_out.write(bytes([byte_c]))
-f_out.write(bytes([byte_n]))
+if byte_c > 0:
+  f_out.write(bytes([byte_c]))
+  f_out.write(bytes([byte_n]))
 
 # the end mark
 f_out.write(bytes([0xFF]))
