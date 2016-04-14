@@ -33,7 +33,7 @@ obj/%.o: src/%.s
 	@$(CC) -I inc --bin-include-dir gfx -o $@ $<
 
 gfx/%.rle: gfx/%.chr
-	@echo convering $< to rle format...
+	@echo converting $< to rle format...
 	@$(RLE) $< $@
 
 clean:
