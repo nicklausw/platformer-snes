@@ -60,6 +60,8 @@ done:
   lda (rle_cp_src),y
   cpa #$ff  ; RLE data is terminated by a run length of $FF
   beq done  ; But what does a run length of 0 do?
+  cpa #$fe
+  beq copy_fe
   tax
   iny
   lda (rle_cp_src),y
@@ -91,7 +93,48 @@ rle_inter:
   stx rle_cp_index
   ply  ; Restore source index
   bra loop
- 
+
+copy_fe:
+  
+  ; this code gets a little crazy, so bear with me.
+  
+  iny ; get number of bytes to copy
+  lda (rle_cp_src),y
+  iny ; don't copy number of bytes to copy!
+  sty rle_cp_count
+  
+  ldx #$00 ; 0 higher bit
+  tax ; x has bytes remaining
+  stx rle_cp_remain
+  
+  ldx rle_cp_index
+
+fe_loop:
+  lda (rle_cp_src),y
+  iny ; for next byte
+  
+  sta rle_cp_dat,x
+  
+  ; this is a weird way of saying "one less remaining"
+  phx
+  ldx rle_cp_remain
+  dex
+  stx rle_cp_remain
+  plx
+  
+  ; increase the index
+  inx
+  
+  ; now check how much remaining
+  lda rle_cp_remain
+  cpa #$00
+  bne fe_loop
+  
+  ; put the index back
+  stx rle_cp_index
+  
+  bra loop
+  
 done:
   rtl
 .endproc

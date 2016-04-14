@@ -13,7 +13,7 @@
 .global font, font_size
 
 ; ram.s
-.globalzp msg_ram, rle_cp_src, rle_cp_index
+.globalzp msg_ram, rle_cp_src, rle_cp_index, rle_cp_count, rle_cp_remain
 .global rle_cp_dat: far
 
 ; initialize_snes.s
