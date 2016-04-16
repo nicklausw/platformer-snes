@@ -24,102 +24,114 @@ InitializeSNES:
 
   rep #$30     ; A=16, X/Y=16
 
-  ; Note: this should correlate with ZEROPAGE in snes.cfg
-  lda #$0000
-  tcd          ; Set D = $0000 (direct page)
 
   ; Note: this should correlate with the top of BSS in snes.cfg
   ldx #$1fff
   txs          ; Set X = $1fff (stack pointer)
   
+  lda #$2100
+  tad              ; temporarily move direct page to PPU I/O area
+  
   sep #$20     ; A=8
   
   ; this fixes things somehow
   lda #$30
-  sta $2130
-  stz $2131
-  stz $2132
-  stz $2133
+  sta $30
+  stz $31
+  stz $32
+  stz $33
   
   lda #$80
-  sta $2100
-  stz $2101
-  stz $2102
-  stz $2103
-  stz $2104
-  stz $2105
-  stz $2106
-  stz $2107
-  stz $2108
-  stz $2109
-  stz $210a
-  stz $210b
-  stz $210c
-  stz $210d
-  stz $210d
-  stz $210e
-  stz $210e
-  stz $210f
-  stz $210f
-  stz $2110
-  stz $2110
-  stz $2111
-  stz $2111
-  stz $2112
-  stz $2112
-  stz $2113               
-  stz $2113               
-  stz $2114
-  stz $2114
+  sta $00
+  stz $01
+  stz $02
+  stz $03
+  stz $04
+  stz $05
+  stz $06
+  stz $07
+  stz $08
+  stz $09
+  stz $0a
+  stz $0b
+  stz $0c
+  stz $0d
+  stz $0d
+  stz $0e
+  stz $0e
+  stz $0f
+  stz $0f
+  stz $10
+  stz $10
+  stz $11
+  stz $11
+  stz $12
+  stz $12
+  stz $13               
+  stz $13               
+  stz $14
+  stz $14
   lda #$80
-  sta $2115
-  stz $2116
-  stz $2117
-  stz $211a
-  stz $211b
+  sta $15
+  stz $16
+  stz $17
+  stz $1a
+  stz $1b
   lda #$01
-  sta $211b
-  stz $211c
-  stz $211c
-  stz $211d
-  stz $211d
-  stz $211e       
+  sta $1b
+  stz $1c
+  stz $1c
+  stz $1d
+  stz $1d
+  stz $1e       
   lda #$01
-  sta $211e
-  stz $211f
-  stz $211f
-  stz $2120
-  stz $2120
-  stz $2121
-  stz $2123
-  stz $2124
-  stz $2125
-  stz $2126
-  stz $2127
-  stz $2128
-  stz $2129
-  stz $212a
-  stz $212b
-  stz $212c
-  stz $212d
-  stz $212e
-  stz $212f
-  stz $4200
+  sta $1e
+  stz $1f
+  stz $1f
+  stz $20
+  stz $20
+  stz $21
+  stz $23
+  stz $24
+  stz $25
+  stz $26
+  stz $27
+  stz $28
+  stz $29
+  stz $2a
+  stz $2b
+  stz $2c
+  stz $2d
+  stz $2e
+  stz $2f
+  
+  seta16
+  lda #$4200
+  tcd
+  seta8
+  
+  stz $00
   lda #$ff
-  sta $4201
-  stz $4202
-  stz $4203
-  stz $4204
-  stz $4205
-  stz $4206
-  stz $4207
-  stz $4208
-  stz $4209
-  stz $420a
-  stz $420b
-  stz $420c
-  stz $420d
-
+  sta $01
+  stz $02
+  stz $03
+  stz $04
+  stz $05
+  stz $06
+  stz $07
+  stz $08
+  stz $09
+  stz $0a
+  stz $0b
+  stz $0c
+  stz $0d
+  
+  ; Note: this should correlate with ZEROPAGE in snes.cfg
+  seta16
+  lda #$0000
+  tcd          ; Set D = $0000 (direct page)
+  seta8
+  
 ;ClearVram
   LDA #$80
   STA $2115         ;Set VRAM port to word access
