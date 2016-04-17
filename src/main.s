@@ -95,6 +95,7 @@ done:
   
 fade_in:
   wai ; wait a frame
+  wai ; another!
   sta PPUBRIGHT
   ina
   cpa #$0f
