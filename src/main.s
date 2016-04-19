@@ -18,6 +18,9 @@
   lda #>$6000
   sta NTADDR+0   ; plane 0 nametable at $6000
   sta NTADDR+1   ; plane 1 nametable also at $6000
+  lda #$FF
+  sta BGSCROLLY+0  ; The PPU displays lines 1-224, so set scroll to
+  sta BGSCROLLY+0  ; $FF so that the first displayed line is line 0
   
   
   
@@ -98,7 +101,7 @@ fade_in:
   wai ; another!
   sta PPUBRIGHT
   ina
-  cpa #$0f
+  cpa #$10
   bne fade_in
   
 ?forever:
