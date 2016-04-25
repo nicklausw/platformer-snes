@@ -46,7 +46,7 @@ for c in f_in.read():
         single_build = 0
         single_list = []
       
-      elif single_build > 0:
+      elif single_build == 1:
         # not worth a list
         
         while single_build < 2:
@@ -55,7 +55,20 @@ for c in f_in.read():
           
         single_build = 0
         single_list = []
+      
+      elif single_build == 2:
+        # not worth a list
         
+        single_build = 0
+        
+        while single_build < 2:
+          f_out.write(bytes([1, single_list[single_build]]))
+          single_build += 1
+          
+        single_build = 0
+        single_list = []
+      
+      
       f_out.write(bytes([byte_c]))
       f_out.write(bytes([byte_n]))
       
