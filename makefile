@@ -17,7 +17,7 @@ GFX = $(wildcard gfx/*.chr)
 RLE_G = $(subst .chr,.rle,$(GFX))
 
 all: $(TITLE).sfc
-	$(EMU) $(TITLE).sfc
+	$(EMU) $(TITLE).sfc >/dev/null 2>&1
 
 $(TITLE).sfc: $(OFILES)
 	@echo linking to $(TITLE).sfc...

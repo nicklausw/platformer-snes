@@ -5,11 +5,7 @@
 
 .segment "CODE"
 
-; we'll need this at some point ;3
-zero_fill_byte:
-  .byte $00
-
-InitializeSNES:
+.proc InitializeSNES
   ; Register initialisation values, per official Nintendo documentation
   
   sei          ; Disable interrupts
@@ -199,3 +195,7 @@ _Loop09:
   LDA #$01          ;now zero the next 64KB (i.e. 128KB total)
   STA $420B         ;Initiate transfer
   jmp reset
+
+ zero_fill_byte:
+  .byte $00
+.endproc

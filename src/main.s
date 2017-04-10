@@ -13,11 +13,14 @@
   lda #$01
   sta BGMODE     ; mode 0 (four 2-bit BGs) with 8x8 tiles
   stz BGCHRADDR  ; bg planes 0-1 CHR at $0000
+
   lda #$4000 >> 13
   sta OBSEL      ; sprite CHR at $4000, sprites are 8x8 and 16x16
+
   lda #>$6000
   sta NTADDR+0   ; plane 0 nametable at $6000
   sta NTADDR+1   ; plane 1 nametable also at $6000
+  
   lda #$FF
   sta BGSCROLLY+0  ; The PPU displays lines 1-224, so set scroll to
   sta BGSCROLLY+0  ; $FF so that the first displayed line is line 0
